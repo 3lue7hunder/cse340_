@@ -1,0 +1,23 @@
+<h1><%- title %></h1>
+<%- messages() %>
+<% if (errors) { %>
+    <ul class="notice">
+        <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+        <% }) %>
+    </ul>
+<% } %>    
+
+<form id="class-form" action="/account/delete-user" method="post">
+    <p class="requirement">Confirm Deletion - This is permanent!</p>
+    <div class="inv-forms">
+        <label>First Name<input type="text" name="account_firstname" id="accountFirstName" required value="<%= locals.account_firstname %>" readonly></label>
+        <label>Last Name<input type="text" name="account_lastname" id="accountLastName" required value="<%= locals.account_lastname %>" readonly></label>
+        <label>Email<input type="email" name="account_email" id="accountEmail" required value="<%= locals.account_email %>"readonly></label>
+        <label>Account Type<input type="text" name="account_type" id="accountType" required value="<%= locals.account_type %>" readonly></label>
+        <input type="submit" name="submit" class="inv-form-button" value="Delete User">
+        <input type="hidden" name="account_id"
+        <% if(locals.account_id) { %> value=" <%= locals.account_id %>"
+        <% } %>>
+    </div>
+</form>

@@ -1,0 +1,38 @@
+<div id="outer-reg-form">
+    <h1><%- title %></h1>
+    <%- messages() %>
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error => { %>
+                <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+    <% } %>    
+    <form id="register-form" action="/account/register" method="post">
+        <div id="inner-reg-form">
+            <label>First Name<input type="text" name="account_firstname" id="accountFirstName" required value="<%= locals.account_firstname %>"></label>
+            <label>Last Name<input type="text" name="account_lastname" id="accountLastName" required value="<%= locals.account_lastname %>"></label>
+            <label>Email<input type="email" name="account_email" id="accountEmail" required value="<%= locals.account_email %>"></label>
+            <label>Password<span id="pwd-info"><br>Must be at least 12 characters and contain at least one number, 1 capital letter, and 1 special character</span><input type="password" name="account_password" id="pword" required minlength="12" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?.*[^a-zA-Z0-9])(?!.*\s).{12,}$"></label>
+            <span id="pswdBtn">Show Password</span>
+            <div class="reg-form-button">
+                <input type="submit" Value="REGISTER">
+            </div>
+        </div>
+    </form>
+
+    <script>
+        const pswdBtn = document.querySelector("#pswdBtn");
+        pswdBtn.addEventListener("click", function() {
+            const pswdInput = document.getElementById("pword");
+            const type = pswdInput.getAttribute("type");
+            if (type == "password") {
+                pswdInput.setAttribute("type", "text");
+                pswdBtn.innerHTML = "Hide Password";
+            } else {
+                pswdInput.setAttribute("type", "password");
+                pswdBtn.innerHTML = "Show Password";
+            }
+        })
+    </script>
+</div>

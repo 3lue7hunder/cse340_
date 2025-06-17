@@ -4,3 +4,442 @@
 *:after {
   box-sizing: border-box;
 }
+
+:root {
+  --primary-color: #30b3cf;
+  --secondary-color: #242332;
+
+  --heading-font: "Funnel Display", sans-serif;
+  --paragraph-font: "Montserrat", sans-serif;
+}
+
+* {
+  margin: 0;
+}
+header {
+  background-color: white;
+}
+.siteName {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  font-size: 30px;
+  font-family: var(--heading-font);
+}
+.siteName a, #tools a {
+  text-decoration: none;
+  color: black;
+}
+#tools {
+  position: absolute;
+  top: -3px;
+  right: 0rem;
+  padding: 1rem;
+  font-family: var(--paragraph-font);
+}
+nav {
+  background-color: var(--secondary-color);
+  width: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-family: var(--paragraph-font);
+}
+nav ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  list-style: none;
+  text-align: left;
+  padding: 0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+nav a {
+  text-decoration: none;
+  color: white;
+  padding: 1rem;
+  font-size: 14px;
+}
+#hero img {
+  width: 100%;
+  height: 100%;
+}
+#hero {
+  position: relative;
+  padding-bottom: 20px;
+}
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: white;
+}
+.floating-text {
+  background-color: rgba(255, 255, 255, 0.8);
+  position: absolute;
+  top: 1em;
+  color: var(--primary-color);
+  padding: 5px;
+  width: 100%;
+  max-width: 180px;
+  
+}
+h1, h2, h3 {
+  font-family: var(--heading-font);
+}
+h1 {
+  font-size: 35px;
+}
+.floating-text ul, #inv-display li, #inv-display ul, .vehicle-description ul {
+  list-style: none;
+  padding: 0;
+}
+.floating-text li, .card li {
+  padding: 3px;
+  font-size: 18px;
+  font-family: var(--paragraph-font);
+}
+#button {
+  background-color: var(--primary-color);
+  color: black;
+  font-family: var(--paragraph-font);
+  font-size: 20px;
+  padding: 10px;
+  border: 1px outset buttonborder;
+  border-radius: 3px;
+  text-decoration: none;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+.main-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 2fr));
+  justify-content: center;
+  margin: 10px;
+  gap: 3rem;
+  padding: 10px;
+}
+.card {
+  margin: 15px;
+}
+.card ul {
+  padding-left: 20px;
+}
+.card h3 {
+  font-size: 25px;
+}
+.upgrade-links {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2rem;
+  margin: 5px;
+}
+.upgrade-fig {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-color: var(--primary-color);
+}
+figure {
+  position: relative;
+}
+figcaption {
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  right: 0;
+  background-color: white;
+}
+footer {
+  padding-top: 15px;
+  padding-left: 5px;
+  font-family: var(--paragraph-font);
+}
+
+nav li:hover {
+  background-color: var(--primary-color);
+}
+nav li a:hover {
+  color: black;
+}
+#tools a:hover {
+  color: #136172;
+}
+#button:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+
+#inv-display {
+  padding: 0;
+  display: flex;
+  margin: 0 auto;
+  /* flex-direction: column; */
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+#inv-display li {
+  margin: 10px;
+  text-decoration: none;
+  text-align: center;
+  border: solid 1px black;
+  border-radius: 3px;
+  position: relative;
+  height: 325px;
+  max-width: 350px;
+  width: 100%;
+}
+#inv-display img {
+  width: 100%;
+  max-width: 350px;
+}
+.namePrice {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: solid 5px black;
+}
+
+.vehicle-info {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.vehicle-image img {
+  width: 100%;
+}
+.vehicle-description li {
+  padding: 8px;
+  font-size: 20px;
+  font-family: var(--paragraph-font);
+}
+.vehicle-description ul {
+  padding-top: 10px;
+}
+
+#loginForm, #outer-reg-form {
+  background-color: #99abc5;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  font-family: var(--paragraph-font);
+  border-radius: 8px;
+}
+#inner-form {
+  background-color: #1f3b4d;
+  color: white;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+}
+label {
+  font-size: 20px;
+}
+input[type=email], input[type=password], input[type=text], select, textarea, input[type=number] {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px 20px;
+  display: inline-block;
+  box-sizing: border-box;
+  font-family: var(--paragraph-font);
+}
+.form-button {
+  text-align: center;
+}
+#loginForm input[type=submit], #register-form input[type=submit] {
+  padding-right: 15px;
+  padding-left: 15px;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 25px;
+  width: 100px;
+  font-family: var(--paragraph-font);
+}
+input[type=submit]:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+#loginForm p {
+  text-align: center;
+  font-size: 18px;
+  padding-top: 10px;
+}
+#loginForm a, #login-info {
+  color: white;
+}
+#login-info {
+  font-size: 11px;
+}
+#outer-reg-form {
+  border: solid 3px black;
+  background-color: white;
+  margin-top: 10px;
+}
+#pswdBtn {
+  font-family: var(--paragraph-font);
+  font-size: 15px;
+  border: solid 2px black;
+  border-radius: 3px;
+  padding: 2px;
+  width: 8.4em;
+  display: inline-block;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.reg-form-button input[type=submit] {
+  font-family: var(--paragraph-font);
+  margin-top: 1em;
+  background-color: var(--secondary-color);
+  color: white;
+  padding-right: 15px;
+  padding-left: 15px;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 25px;
+  width: 200px;
+}
+.reg-form-button input[type=submit]:hover {
+  background-color: rgb(4, 73, 129);
+}
+#pwd-info {
+  font-size: 11px;
+  color: darkslategray;
+}
+#class-form input[type=submit] {
+  padding-right: 15px;
+  padding-left: 15px;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 25px;
+  width: 200px;
+  font-family: var(--paragraph-font);
+}
+#class-form {
+  border-radius: 8px;
+  margin: 10px;
+  max-width: 600px;
+  width: 100%;
+  padding: 8px;
+  background-color: var(--primary-color);
+  font-family: var(--paragraph-font);
+}
+.requirement {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  font-style: italic;
+  font-size: 18px;
+}
+.inv-forms {
+  border: solid 2px white;
+  border-radius: 8px;
+  padding: 8px;
+}
+.inv-info {
+  color: black;
+  font-size: 11px;
+}
+:required:invalid {
+  background-color: rgb(253, 226, 226);
+}
+:required:valid {
+  background-color: rgb(229, 255, 229);
+}
+#management {
+  margin: 8px;
+  font-family: var(--paragraph-font);
+  list-style: none;
+}
+#management li {
+  padding: 10px;
+  font-size: 20px;
+}
+.notice {
+  color: rgb(165, 3, 3);
+  font-size: 18px;
+  font-style: italic;
+  font-family: var(--paragraph-font);
+}
+input[type=submit]:hover:disabled {
+  background-color: rgba(165, 0, 0, 0.575);
+}
+#inventoryDisplay {
+  border-collapse: collapse;
+  font-family: var(--paragraph-font);
+}
+#inventoryDisplay tr:nth-child(even) {
+  background-color: rgb(225, 224, 224);
+}
+#inventoryDisplay td, #inventoryDisplay th {
+  border: 1px solid var(--secondary-color);
+  padding: 8px;
+}
+#inventoryDisplay th {
+  text-align: left;
+  background-color: var(--secondary-color);
+  color: white;
+  font-family: var(--heading-font);
+  font-size: 22px;
+}
+#manage-p {
+  font-family: var(--paragraph-font);
+  padding-top: 6px;
+}
+#pwd-update-head {
+  margin-top: 20px;
+  border-top: solid 1px black;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.management h2, .management h3 {
+  padding-top: 10px;
+  padding-bottom: 4px;
+}
+.management a {
+  font-family: var(--paragraph-font);
+}
+#ulogged {
+  padding-top: 15px;
+  font-family: var(--paragraph-font);
+}
+.management-div #add-user-manage {
+  font-size: 18px;
+  font-family: var(--paragraph-font);
+}
+.manager-add-user {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+@media screen and (min-width: 600px) {
+  #outer {
+    background-image: url('/images/site/checkerboard.jpg');
+  }
+  #wrapper {
+    padding: 10px;
+    border: solid 5px var(--primary-color);
+    border-radius: 3px;
+    margin: 40px;
+    background-color: white;
+  }
+  #tools {
+    position: absolute;
+    top: 35px;
+    right: 3rem;
+  }
+  nav a {
+    font-size: 18px;
+  }
+  .vehicle-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  #pwd-info {
+    font-size: 13px;
+  }
+}

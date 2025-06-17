@@ -1,0 +1,17 @@
+<h1><%- title %></h1>
+<%- messages() %>
+<% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error => { %>
+                <li><%= error.msg %></li>
+            <% }) %>
+        </ul>
+    <% } %>
+
+<div class="management-div">
+    <a href="/account/add-user" id="add-user-manage">Add a User</a>
+    <h2>Manage Existing Users</h2>
+    <p id="manage-p">Select a user from the list to modify or delete them</p>
+    <%- userSelect %>
+    <noscript>JavaScript must be enabled to use this page.</noscript>
+</div>
