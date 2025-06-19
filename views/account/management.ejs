@@ -15,3 +15,27 @@
     <%- userSelect %>
     <noscript>JavaScript must be enabled to use this page.</noscript>
 </div>
+
+
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<h2>Welcome <%= locals.accountData.account_firstname %></h2>
+<p>You're logged in.</p>
+
+<ul id="management">
+  <li><a href="/account/update" title="Update account information">Update Account Information</a></li>
+  <!-- Add this new link for reviews -->
+  <li><a href="/review/my-reviews" title="Manage your vehicle reviews">My Reviews</a></li>
+  
+  <% if (locals.accountData.account_type == "Admin" || locals.accountData.account_type == "Employee") { %>
+    <li><a href="/inv/" title="Manage Inventory">Inventory Management</a></li>
+    <!-- Add this for admin review management -->
+    <% if (locals.accountData.account_type == "Admin") { %>
+      <li><a href="/review/admin" title="Manage all reviews">Review Management</a></li>
+    <% } %>
+  <% } %>
+</ul>

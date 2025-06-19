@@ -1,0 +1,89 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<% if (reviews && reviews.length > 0) { %>
+  <div class="admin-reviews-container">
+    <table id="reviewsTable">
+      <thead>
+        <tr>
+          <th>Vehicle</th>
+          <th>Reviewer</th>
+          <th>Title</th>
+          <th>Rating</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% reviews.forEach(review => { %>
+          <tr class="<%= review.review_approved ? 'approved' : 'pending' %>">
+            <td><%= review.inv_year %> <%= review.inv_make %> <%= review.inv_model %></td>
+            <td><%= review.account_firstname %> <%= review.account_lastname %></td>
+            <td><%= review.review_title %></td>
+            <td>
+              <% for(let i = 1; i <= 5; i++) { %>
+                <% if(i <= review.review_rating) { %>⭐<% } else { %>☆<% } %>
+              <% } %>
+            </td>
+            <td><%= new Date(review.review_date).toLocaleDateString() %></td>
+            <td>
+              <span class="status-badge <%= review.review_approved ? 'approved' : 'pending' %>">
+                <%= review.review_approved ? 'Approved' : 'Pending' %>
+              </span>
+            </td>
+            <td>
+              <form action="/review/toggle-approval" method="post" style="display: inline;">
+                <input type="hidden" name="review_id" value="<%= review.review_id %>">
+                <input type="submit" 
+                       value="<%= review.review_approved ? 'Unapprove' : 'Approve' %>"
+                       class="<%= review.review_approved ? 'unapprove-btn' : 'approve-btn' %>">
+              </form>
+              <button onclick="showReviewDetails('<%= review.review_id %>')" class="view-btn">View</button>
+            </td>
+          </tr>
+          <tr id="review-details-<%= review.review_id %>" class="review-details" style="display: none;">
+            <td colspan="7">
+              <div class="review-full-content">
+                <strong>Full Review:</strong>
+                <p><%= review.review_text %></p>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function showReviewDetails(reviewId) {
+      const detailsRow = document.getElementById(`review-details-${reviewId}`);
+      if (detailsRow.style.display === 'none') {
+        detailsRow.style.display = 'table-row';
+      } else {
+        detailsRow.style.display = 'none';
+      }
+    }
+  </script>
+
+<% } else { %>
+  <div class="no-reviews">
+    <p>No reviews found in the system.</p>
+  </div>
+<% } %>
+
+<p><a href="/account/">Back to Account Management</a></p>
+
+<style>
+.approved { background-color: #d4edda; }
+.pending { background-color: #fff3cd; }
+.status-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; }
+.status-badge.approved { background-color: #28a745; color: white; }
+.status-badge.pending { background-color: #ffc107; color: black; }
+.approve-btn { background-color: #28a745; color: white; padding: 4px 8px; }
+.unapprove-btn { background-color: #dc3545; color: white; padding: 4px 8px; }
+.view-btn { background-color: #007bff; color: white; padding: 4px 8px; }
+</style>

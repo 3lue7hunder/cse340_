@@ -6,4 +6,49 @@
 
 <%# messages() %>
 
-<%- listing %>
+<%- grid %>
+
+<!-- Reviews Section -->
+<div class="reviews-container">
+  <!-- Review Actions for Logged-in Users -->
+  <% if (locals.loggedin) { %>
+    <div class="review-actions">
+      <% if (canReview) { %>
+        <p><a href="/review/add/<%= inv_id %>" id="button">Write a Review</a></p>
+      <% } else if (userHasReviewed) { %>
+        <p>You have already reviewed this vehicle. <a href="/review/my-reviews">View your reviews</a></p>
+      <% } %>
+    </div>
+  <% } else { %>
+    <div class="review-login-prompt">
+      <p><a href="/account/login">Login</a> to write a review for this vehicle.</p>
+    </div>
+  <% } %>
+
+  <!-- Display Reviews -->
+  <% if (reviews && reviews.length > 0) { %>
+    <div class="reviews-section">
+      <h3>Customer Reviews (<%= reviews.length %>)</h3>
+      <% reviews.forEach(review => { %>
+        <div class="review-item">
+          <div class="review-header">
+            <h4><%= review.review_title %></h4>
+            <div class="review-rating">
+              <% for(let i = 1; i <= 5; i++) { %>
+                <% if(i <= review.review_rating) { %>⭐<% } else { %>☆<% } %>
+              <% } %>
+            </div>
+          </div>
+          <p class="review-author">By: <%= review.account_firstname %> <%= review.account_lastname %></p>
+          <p class="review-date"><%= new Date(review.review_date).toLocaleDateString() %></p>
+          <p class="review-text"><%= review.review_text %></p>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="no-reviews">
+      <h3>No Reviews Yet</h3>
+      <p>Be the first to review this vehicle!</p>
+    </div>
+  <% } %>
+</div>

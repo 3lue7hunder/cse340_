@@ -1,5 +1,6 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
+const reviewModel = require("../models/review-model")
 
 const invCont = {}
 
@@ -8,32 +9,77 @@ const invCont = {}
  * ************************** */
 invCont.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classificationId
-  const data = await invModel.getInventoryByClassificationId(classification_id)
-  const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
-  const className = data[0].classification_name
-  res.render("./inventory/classification", {
-    title: className + " vehicles",
-    nav,
-    grid,
-  })
+  
+  try {
+    // Get vehicles with review stats
+    const data = await invModel.getInventoryByClassificationIdWithReviews(classification_id)
+    const grid = await utilities.buildClassificationGrid(data)
+    let className = data[0]?.classification_name || "Unknown"
+    
+    res.render("./inventory/classification", {
+      title: className + " vehicles",
+      nav,
+      grid,
+      errors: null,
+    })
+  } catch (error) {
+    console.error("buildByClassificationId error:", error)
+    next(error)
+  }
 }
 
 /* ***************************
  *  Build inventory by inventory ID
  * ************************** */
 invCont.buildByInventoryId = async function (req, res, next) {
-  const inventory_id = req.params.inventoryId
-  const data = await invModel.getInventoryByInventoryId(inventory_id)
-  const listing = await utilities.buildSingleListing(data[0])
+  // ✅ Fixed parameter name to match route definition
+  const inv_id = req.params.inventoryId
   let nav = await utilities.getNav()
-  const itemName = `${data[0].inv_year} ${data[0].inv_make} ${data[0].inv_model}`
 
-  res.render("./inventory/listing", {
-    title: itemName,
-    nav,
-    listing,
-  })
+  try {
+    // Get vehicle data with review stats
+    const data = await invModel.getInventoryWithReviewStats(inv_id)
+
+    // Add this check
+    if (!data) {
+      req.flash("notice", "Sorry, the requested vehicle was not found.")
+      return res.status(404).redirect("/inv")
+    }
+
+    // Get reviews for this vehicle
+    const reviews = await reviewModel.getReviewsByInvId(inv_id)
+
+    // Check if user is logged in and hasn't reviewed this vehicle yet
+    let canReview = false
+    let userHasReviewed = false
+
+    if (res.locals.loggedin) {
+      const account_id = res.locals.accountData.account_id
+      const existingReview = await reviewModel.checkExistingReview(inv_id, account_id)
+      userHasReviewed = !!existingReview
+      canReview = !userHasReviewed
+    }
+
+    const grid = await utilities.buildVehicleDetailGrid(data)
+    let vehicleName = `${data.inv_make} ${data.inv_model}`
+
+    res.render("./inventory/listing", {
+      title: vehicleName,
+      nav,
+      grid,
+      reviews,
+      canReview,
+      userHasReviewed,
+      inv_id,
+      avgRating: parseFloat(data.avg_rating || 0).toFixed(1),
+      reviewCount: data.review_count || 0,
+      errors: null,
+    })
+  } catch (error) {
+    console.error("buildByInventoryId error:", error)
+    next(error)
+  }
 }
 
 /* ***************************
@@ -158,7 +204,6 @@ invCont.buildEditInventory = async function (req, res, next) {
   const inventory_id = parseInt(req.params.inventory_id);
   let nav = await utilities.getNav();
   const itemData = (await invModel.getInventoryByInventoryId(inventory_id))[0]
-  // const classificationSelect = await utilities.buildClassificationList(itemData.classification_id); // Included lesson code, doesn't work
   const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
   let classifications = await utilities.buildClassificationList(itemData.classification_id);
 
@@ -166,7 +211,6 @@ invCont.buildEditInventory = async function (req, res, next) {
     title: "Edit " + itemName,
     nav,
     classifications,
-    // classificationSelect: classificationSelect, // Included code from lesson but doesn't work
     errors: null,
     inv_id: itemData.inv_id,
     inv_make: itemData.inv_make,

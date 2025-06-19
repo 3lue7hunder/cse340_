@@ -72,10 +72,14 @@ app.use("/account", require("./routes/accountRoute"))
 // Inventory routes
 app.use("/inv", inventoryRoute)
 
+// ✅ FIXED: Review routes moved BEFORE the 404 handler
+const reviewRoute = require("./routes/reviewRoute")
+app.use("/review", reviewRoute)
+
 // Intentional Error route
 app.use("/error", intentionalErrorRoute);
 
-// File Not Found Route - must be last route in list
+// ✅ IMPORTANT: File Not Found Route - must be LAST route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})
 })

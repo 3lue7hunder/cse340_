@@ -256,6 +256,144 @@ Util.buildUserList = async function (account_id = null) {
     return dataTable
 }
 
+/* **************************************
+* Build the classification view HTML with review stats
+* ************************************ */
+Util.buildClassificationGrid = async function(data){
+  let grid
+  if(data.length > 0){
+    grid = '<ul id="inv-display">'
+    data.forEach(vehicle => { 
+      grid += '<li>'
+      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
+      + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
+      + ' details"><img src="' + vehicle.inv_image 
+      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
+      +' on CSE Motors" /></a>'
+      grid += '<div class="namePrice">'
+      grid += '<hr />'
+      grid += '<h2>'
+      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
+      + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
+      + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
+      grid += '</h2>'
+      
+      // Add review stats
+      if (vehicle.review_count > 0) {
+        grid += '<div class="review-stats">'
+        grid += '<span class="rating">'
+        const rating = parseFloat(vehicle.avg_rating || 0)
+        for (let i = 1; i <= 5; i++) {
+          grid += i <= rating ? '⭐' : '☆'
+        }
+        grid += ` (${vehicle.review_count} review${vehicle.review_count !== 1 ? 's' : ''})</span>`
+        grid += '</div>'
+      }
+      
+      grid += '<span>$' 
+      + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+      grid += '</div>'
+      grid += '</li>'
+    })
+    grid += '</ul>'
+  } else { 
+    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+  }
+  return grid
+}
+
+/* **************************************
+* Build the detail view HTML with reviews
+* ************************************ */
+Util.buildVehicleDetailGrid = async function(data){
+  let grid = ''
+  if(data){
+    grid += '<div class="vehicle-info">'
+    grid += '<div class="vehicle-image">'
+    grid += '<img src="' + data.inv_image + '" alt="' + data.inv_make + ' ' + data.inv_model + '">'
+    grid += '</div>'
+    grid += '<div class="vehicle-description">'
+    grid += '<h2>' + data.inv_make + ' ' + data.inv_model + ' Details</h2>'
+    
+    // Add review stats
+    if (data.review_count > 0) {
+      grid += '<div class="review-summary">'
+      grid += '<h3>Customer Reviews</h3>'
+      grid += '<div class="rating-display">'
+      const rating = parseFloat(data.avg_rating || 0)
+      for (let i = 1; i <= 5; i++) {
+        grid += i <= rating ? '⭐' : '☆'
+      }
+      grid += ` ${rating.toFixed(1)} out of 5 stars (${data.review_count} review${data.review_count !== 1 ? 's' : ''})`
+      grid += '</div>'
+      grid += '</div>'
+    }
+    
+    grid += '<p><strong>Price: $' + new Intl.NumberFormat('en-US').format(data.inv_price) + '</strong></p>'
+    grid += '<p><strong>Description:</strong> ' + data.inv_description + '</p>'
+    grid += '<p><strong>Color:</strong> ' + data.inv_color + '</p>'
+    grid += '<p><strong>Miles:</strong> ' + new Intl.NumberFormat('en-US').format(data.inv_miles) + '</p>'
+    grid += '</div>'
+    grid += '</div>'
+  } else {
+    grid += '<p class="notice">Sorry, no matching vehicle could be found.</p>'
+  }
+  return grid
+}
+
+/* ****************************************
+ * Build reviews HTML for display
+ * *************************************** */
+Util.buildReviewsHTML = function(reviews) {
+  let html = ''
+  if (reviews && reviews.length > 0) {
+    html += '<div class="reviews-section">'
+    html += '<h3>Customer Reviews</h3>'
+    reviews.forEach(review => {
+      html += '<div class="review-item">'
+      html += '<div class="review-header">'
+      html += '<h4>' + review.review_title + '</h4>'
+      html += '<div class="review-rating">'
+      for (let i = 1; i <= 5; i++) {
+        html += i <= review.review_rating ? '⭐' : '☆'
+      }
+      html += '</div>'
+      html += '</div>'
+      html += '<p class="review-author">By: ' + review.account_firstname + ' ' + review.account_lastname + '</p>'
+      html += '<p class="review-date">' + new Date(review.review_date).toLocaleDateString() + '</p>'
+      html += '<p class="review-text">' + review.review_text + '</p>'
+      html += '</div>'
+    })
+    html += '</div>'
+  }
+  return html
+}
+
+// Check if user is logged in
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.accountData) {
+    next()
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+}
+
+// Check if user is Admin or Employee
+Util.checkAccountType = (req, res, next) => {
+  if (res.locals.accountData && 
+      (res.locals.accountData.account_type == "Admin" || 
+       res.locals.accountData.account_type == "Employee")) {
+    next()
+  } else {
+    req.flash("notice", "You do not have permission to access this resource.")
+    return res.redirect("/account/")
+  }
+}
+
+// Error handler
+Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for 

@@ -99,6 +99,57 @@ async function deleteInventory(inv_id) {
   } catch (error) {
     new Error("Delete Inventory Error");
   }
-};
+}
 
-module.exports = {getClassifications, getInventoryByClassificationId, getInventoryByInventoryId, getClassifications, addClassification, addInventory, updateInventory, deleteInventory}
+/* ***************************
+ *  Get inventory with review stats
+ * ************************** */
+async function getInventoryWithReviewStats(inv_id) {
+  try {
+    const sql = `SELECT i.*, 
+                 COALESCE(AVG(r.review_rating), 0) as avg_rating,
+                 COUNT(r.review_id) as review_count
+                 FROM inventory i 
+                 LEFT JOIN review r ON i.inv_id = r.inv_id AND r.review_approved = true
+                 WHERE i.inv_id = $1
+                 GROUP BY i.inv_id`
+    const data = await pool.query(sql, [inv_id])
+    return data.rows[0]
+  } catch (error) {
+    console.error("getInventoryWithReviewStats error " + error)
+    throw error
+  }
+}
+
+/* ***************************
+ *  Get all inventory with review stats for classification
+ * ************************** */
+async function getInventoryByClassificationIdWithReviews(classification_id) {
+  try {
+    const sql = `SELECT i.*, 
+                 COALESCE(AVG(r.review_rating), 0) as avg_rating,
+                 COUNT(r.review_id) as review_count
+                 FROM inventory i 
+                 LEFT JOIN review r ON i.inv_id = r.inv_id AND r.review_approved = true
+                 WHERE i.classification_id = $1
+                 GROUP BY i.inv_id
+                 ORDER BY i.inv_make, i.inv_model`
+    const data = await pool.query(sql, [classification_id])
+    return data.rows
+  } catch (error) {
+    console.error("getInventoryByClassificationIdWithReviews error " + error)
+    throw error
+  }
+}
+
+module.exports = {
+  getClassifications,
+  getInventoryByClassificationId,
+  getInventoryByInventoryId,
+  addClassification,
+  addInventory,
+  updateInventory,
+  deleteInventory,
+  getInventoryWithReviewStats,
+  getInventoryByClassificationIdWithReviews
+}

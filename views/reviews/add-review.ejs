@@ -1,0 +1,50 @@
+<% if (locals.title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <h1>Add Review</h1>
+<% } %>
+
+<% if (locals.errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<form id="reviewForm" action="/review/add" method="post">
+  <fieldset>
+    <legend>Leave a Review for <%= locals.vehicleName || locals.vehicle?.inv_make + ' ' + locals.vehicle?.inv_model || 'This Vehicle' %></legend>
+    
+    <label for="review_rating">Rating:</label>
+    <select name="review_rating" id="review_rating" required>
+      <option value="">Select Rating</option>
+      <option value="5" <%= locals.review_rating == 5 ? 'selected' : '' %>>⭐⭐⭐⭐⭐ (5 stars)</option>
+      <option value="4" <%= locals.review_rating == 4 ? 'selected' : '' %>>⭐⭐⭐⭐ (4 stars)</option>
+      <option value="3" <%= locals.review_rating == 3 ? 'selected' : '' %>>⭐⭐⭐ (3 stars)</option>
+      <option value="2" <%= locals.review_rating == 2 ? 'selected' : '' %>>⭐⭐ (2 stars)</option>
+      <option value="1" <%= locals.review_rating == 1 ? 'selected' : '' %>>⭐ (1 star)</option>
+    </select>
+
+    <label for="review_title">Review Title:</label>
+    <input type="text" id="review_title" name="review_title" maxlength="100" 
+           value="<%= locals.review_title || '' %>" required
+           placeholder="Brief summary of your experience">
+
+    <label for="review_text">Your Review:</label>
+    <textarea id="review_text" name="review_text" rows="6" maxlength="1000" required
+              placeholder="Share your detailed experience with this vehicle..."><%= locals.review_text || '' %></textarea>
+
+    <input type="hidden" name="inv_id" value="<%= locals.inv_id || '' %>">
+    
+    <div class="form-button">
+      <input type="submit" value="Submit Review">
+    </div>
+  </fieldset>
+</form>
+
+<% if (locals.inv_id) { %>
+  <p><a href="/inv/detail/<%= inv_id %>">Back to Vehicle Details</a></p>
+<% } else { %>
+  <p><a href="/">Back to Home</a></p>
+<% } %>

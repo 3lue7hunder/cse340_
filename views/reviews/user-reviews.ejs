@@ -1,0 +1,44 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<% if (reviews && reviews.length > 0) { %>
+  <div class="reviews-container">
+    <% reviews.forEach(review => { %>
+      <div class="review-card">
+        <div class="review-header">
+          <h3><%= review.review_title %></h3>
+          <div class="review-rating">
+            <% for(let i = 1; i <= 5; i++) { %>
+              <% if(i <= review.review_rating) { %>⭐<% } else { %>☆<% } %>
+            <% } %>
+          </div>
+        </div>
+        
+        <div class="review-meta">
+          <p><strong>Vehicle:</strong> <%= review.inv_year %> <%= review.inv_make %> <%= review.inv_model %></p>
+          <p><strong>Date:</strong> <%= new Date(review.review_date).toLocaleDateString() %></p>
+          <p><strong>Status:</strong> <%= review.review_approved ? 'Approved' : 'Pending Approval' %></p>
+        </div>
+        
+        <div class="review-content">
+          <p><%= review.review_text %></p>
+        </div>
+        
+        <div class="review-actions">
+          <a href="/review/edit/<%= review.review_id %>">Edit</a> | 
+          <a href="/review/delete/<%= review.review_id %>" style="color: #dc3545;">Delete</a>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } else { %>
+  <div class="no-reviews">
+    <p>You haven't written any reviews yet.</p>
+    <p><a href="/inv/">Browse our inventory</a> to find a vehicle to review!</p>
+  </div>
+<% } %>
+
+<p><a href="/account/">Back to Account Management</a></p>

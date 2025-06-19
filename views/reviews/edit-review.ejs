@@ -1,0 +1,43 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<% if (errors) { %>
+  <ul class="notice">
+    <% errors.array().forEach(error => { %>
+      <li><%= error.msg %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<form id="editReviewForm" action="/review/update" method="post">
+  <fieldset>
+    <legend>Edit Your Review for <%= vehicleName %></legend>
+    
+    <label for="review_rating">Rating:</label>
+    <select name="review_rating" id="review_rating" required>
+      <option value="5" <%= reviewData.review_rating == 5 ? 'selected' : '' %>>⭐⭐⭐⭐⭐ (5 stars)</option>
+      <option value="4" <%= reviewData.review_rating == 4 ? 'selected' : '' %>>⭐⭐⭐⭐ (4 stars)</option>
+      <option value="3" <%= reviewData.review_rating == 3 ? 'selected' : '' %>>⭐⭐⭐ (3 stars)</option>
+      <option value="2" <%= reviewData.review_rating == 2 ? 'selected' : '' %>>⭐⭐ (2 stars)</option>
+      <option value="1" <%= reviewData.review_rating == 1 ? 'selected' : '' %>>⭐ (1 star)</option>
+    </select>
+
+    <label for="review_title">Review Title:</label>
+    <input type="text" id="review_title" name="review_title" maxlength="100" 
+           value="<%= reviewData.review_title %>" required>
+
+    <label for="review_text">Your Review:</label>
+    <textarea id="review_text" name="review_text" rows="6" maxlength="1000" required><%= reviewData.review_text %></textarea>
+
+    <input type="hidden" name="review_id" value="<%= reviewData.review_id %>">
+    
+    <div class="form-button">
+      <input type="submit" value="Update Review">
+    </div>
+  </fieldset>
+</form>
+
+<p><a href="/review/my-reviews">Back to My Reviews</a></p>
